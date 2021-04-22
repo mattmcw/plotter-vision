@@ -73,6 +73,12 @@ function fileOnchange (evt) {
 	reader.readAsArrayBuffer(file);
 };
 
+function fileOnclick () {
+	const element = document.getElementById('fileUpload');
+	element.click();
+}
+
 (function () {
 	document.forms['uploadForm'].elements['fileUpload'].onchange = fileOnchange;
+	document.getElementById('loadFileXml').addEventListener('click', fileOnclick, false); 
 })();
