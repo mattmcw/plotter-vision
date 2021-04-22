@@ -2,6 +2,11 @@
 
 [Fork Demo](https://musing-goldstine-cdd799.netlify.app/)
 
+### Fork Notes
+
+* Separates red/blue into groups and labels them
+* Assigns line color based on UI state
+
 This is a p5.js demo of hidden wire removal of 3D STL files
 to generate SVG files that are suitable for plotting.
 More info: [trmm.net/Plotter-Vision](https://trmm.net/Plotter-Vision/)
