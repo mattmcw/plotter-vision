@@ -11,11 +11,11 @@ function download()
 	let colorName = redblue_mode ? 'red' : dark_mode ? 'white' : 'black';
 	let color = colors[colorName];
 	let svg = "";
-	svg += "<?xm version='1.0'?>\n";
-	svg += "<svg xmlns='http://www.w3.org/2000/svg' version='1.2' baseProfile='tiny' width='" + width + "px' height='" + height + "px'>\n";
+	svg += `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n`;
+	svg += `<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.2" width="${width}px' height="${height}px">\n`;
 	svg += "<desc>plotter.vision</desc>\n";
 
-	svg += `<g xml:id="1${colorName}">\n`;
+	svg += `<g inkscape:label="${colorName}" inkscape:groupmode="layer" id="1${colorName}">\n`;
 	svg += "<path d='\n";
 	svg += stl.svg_path();
 	svg += `' style='stroke:#${color};stroke-width:1;fill:none'/>\n`;
@@ -25,7 +25,7 @@ function download()
 	{
 		colorName = 'blue';
 		color = colors[colorName];
-		svg += `<g xml:id="2${colorName}">\n`;
+		svg += `<g inkscape:label="${colorName}" inkscape:groupmode="layer" id="2${colorName}">\n`;
 		svg += "<path d='\n";
 		svg += stl2.svg_path();
 		svg += `' style='stroke:#${color};stroke-width:1;fill:none'/>\n`;
