@@ -1,10 +1,12 @@
 # Plotter Vision
 
+[Fork Demo](https://musing-goldstine-cdd799.netlify.app/)
+
 This is a p5.js demo of hidden wire removal of 3D STL files
 to generate SVG files that are suitable for plotting.
 More info: [trmm.net/Plotter-Vision](https://trmm.net/Plotter-Vision/)
 
-I'm not a javascript programmre, so this is probably not very well written.
+I'm not a javascript programmer, so this is probably not very well written.
 Pull requests welcome!
 
 Skull test
