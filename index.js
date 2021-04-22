@@ -2,23 +2,33 @@ let filename = "plotter.stl";
 
 function download()
 {	
+	const colors = {
+		red : 'ff0000',
+		blue : '0000ff',
+		black : '000000',
+		white : 'ffffff'
+	};
+	let colorName = redblue_mode ? 'red' : dark_mode ? 'white' : 'black';
+	let color = colors[colorName];
 	let svg = "";
 	svg += "<?xm version='1.0'?>\n";
 	svg += "<svg xmlns='http://www.w3.org/2000/svg' version='1.2' baseProfile='tiny' width='" + width + "px' height='" + height + "px'>\n";
-	svg += "<desc>plotter.vision</desc>";
+	svg += "<desc>plotter.vision</desc>\n";
 
-	svg += "<g id=\"red\">\n";
+	svg += `<g id="${colorName}">\n`;
 	svg += "<path d='\n";
 	svg += stl.svg_path();
-	svg += "' style='stroke:#ff0000;stroke-width:1;fill:none'/>\n";
+	svg += `' style='stroke:#${color};stroke-width:1;fill:none'/>\n`;
 	svg += "</g>\n";
 
 	if (redblue_mode)
 	{
-		svg += "<g id=\"blue\">\n";
+		colorName = 'blue';
+		color = colors[colorName];
+		svg += `<g id="${colorName}">\n`;
 		svg += "<path d='\n";
 		svg += stl2.svg_path();
-		svg += "' style='stroke:#0000ff;stroke-width:1;fill:none'/>\n";
+		svg += `' style='stroke:#${color};stroke-width:1;fill:none'/>\n`;
 		svg += "</g>\n";
 	}
 
