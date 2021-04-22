@@ -39,7 +39,7 @@ function download()
 	document.body.removeChild(element);
 }
 
-fileOnchange = function (evt) {
+function fileOnchange (evt) {
 	const reader = new FileReader();
 	console.log("upload changed", evt);
 	reader.onloadend = (evt) => {
