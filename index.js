@@ -15,7 +15,7 @@ function download()
 	svg += "<svg xmlns='http://www.w3.org/2000/svg' version='1.2' baseProfile='tiny' width='" + width + "px' height='" + height + "px'>\n";
 	svg += "<desc>plotter.vision</desc>\n";
 
-	svg += `<g id="${colorName}">\n`;
+	svg += `<g inkscape:label="${colorName}" inkscape:groupmode="layer" id="${colorName}">\n`;
 	svg += "<path d='\n";
 	svg += stl.svg_path();
 	svg += `' style='stroke:#${color};stroke-width:1;fill:none'/>\n`;
@@ -25,7 +25,7 @@ function download()
 	{
 		colorName = 'blue';
 		color = colors[colorName];
-		svg += `<g id="${colorName}">\n`;
+		svg += `<g inkscape:label="${colorName}" inkscape:groupmode="layer" id="${colorName}">\n`;
 		svg += "<path d='\n";
 		svg += stl2.svg_path();
 		svg += `' style='stroke:#${color};stroke-width:1;fill:none'/>\n`;
