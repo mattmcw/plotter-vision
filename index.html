@@ -5,6 +5,8 @@
     <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
     <style> 
     	body {padding: 0; margin: 0;} 
+    	#fileWrap{ display: inline-block; height: 1px; width: 1px; overflow: hidden; }
+    	#fileWrap input { position: absolute; left: -1000px; }
     	#dnd { display: none; position: fixed; top: 0; left: 0; bottom: 0; right: 0; }
     	#dnd.over{ display: block; }
 	</style>
@@ -16,26 +18,28 @@
   </head>
   <body>
 <form id="uploadForm">
-<input id="fileUpload" name="files[]" style="display:none;" type="file"/>
-<input type="button" id="loadFileXml" value="Upload STL" onclick="document.getElementById('fileUpload').click();" />
-<input id="fileDownload" type="button" value="Download SVG" onclick="download()"/>
-<input type="button" value="Light/Dark" onclick="
-	dark_mode=!dark_mode;
-	redraw=true;"
-/>
-<input type="button" value="Red/Blue 3D" onclick="
-	redblue_mode=!redblue_mode;
-	reproject=true;
-	eye_separation_slider.style.display = redblue_mode ? '' : 'none';
-"/>
-<input id="eye_separation_slider" type="range" style="display:none" min="1" max="60" value="20" oninput="
-	console.log(eye_separation, this);
-	eye_separation=this.value/10;
-	computeEye();
-	reproject=true;
-" />
-<span align=right>
-More info: <a href="https://trmm.net/Plotter-Vision/">trmm.net/Plotter-Vision</a></span>
+	<input type="button" id="loadFileXml" value="Upload STL" />
+	<input id="fileDownload" type="button" value="Download SVG" onclick="download()"/>
+	<input type="button" value="Light/Dark" onclick="
+		dark_mode=!dark_mode;
+		redraw=true;"
+	/>
+	<input type="button" value="Red/Blue 3D" onclick="
+		redblue_mode=!redblue_mode;
+		reproject=true;
+		eye_separation_slider.style.display = redblue_mode ? '' : 'none';
+	"/>
+	<input id="eye_separation_slider" type="range" style="display:none" min="1" max="60" value="20" oninput="
+		console.log(eye_separation, this);
+		eye_separation=this.value/10;
+		computeEye();
+		reproject=true;
+	" />
+	<div id="fileWrap">
+		<input id="fileUpload" name="files[]" type="file"/>
+	</div>
+	<span align=right>
+	More info: <a href="https://trmm.net/Plotter-Vision/">trmm.net/Plotter-Vision</a></span>
 </form>
 <div id="sketch-holder">
       <!-- Our sketch will go here! -->
