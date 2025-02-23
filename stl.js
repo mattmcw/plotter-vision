@@ -43,7 +43,12 @@ function stl_ascii(content)
 	});
 
 	console.log("vertex count = ", vertex.length);
+	return vertex;
+}
 
+
+function vertex2triangles(vertex)
+{
 	let triangles = [];
 	for(let i = 0 ; i < vertex.length ; i += 3)
 	{
@@ -79,16 +84,16 @@ function stl_binary(rawbytes)
 	}
 
 
+	let vertex = [];
+
 	for (let offset = 84 ; offset < len ; offset += 50)
 	{
-		triangles.push(new Triangle(
-			parse_xyz(bytes, offset + 12),
-			parse_xyz(bytes, offset + 24),
-			parse_xyz(bytes, offset + 36),
-		));
+		vertex.push(parse_xyz(bytes, offset + 12));
+		vertex.push(parse_xyz(bytes, offset + 24));
+		vertex.push(parse_xyz(bytes, offset + 36));
 	}
 
-	return triangles;
+	return vertex;
 }
 
 
@@ -98,11 +103,47 @@ function STL(content)
 	const txtbytes = new TextDecoder("utf-8").decode(rawbytes)
 
 	// heuristic to detect ASCII formatted files
+	let vertex;
 	if (txtbytes.substr(0,6) == "solid ") {
-		this.triangles = stl_ascii(txtbytes);
+		vertex = stl_ascii(txtbytes);
 	} else {
-		this.triangles = stl_binary(rawbytes);
+		vertex = stl_binary(rawbytes);
 	}
+
+	// find the total size of the object and scale
+	// it to fit in 100x100x100
+	let minxyz = vertex[0].copy();
+	let maxxyz = vertex[0].copy();
+
+	for(v of vertex)
+	{
+		if (v.x < minxyz.x) minxyz.x = v.x;
+		if (v.y < minxyz.y) minxyz.y = v.y;
+		if (v.z < minxyz.z) minxyz.z = v.z;
+		if (v.x > maxxyz.x) maxxyz.x = v.x;
+		if (v.y > maxxyz.y) maxxyz.y = v.y;
+		if (v.z > maxxyz.z) maxxyz.z = v.z;
+	}
+
+	let dx = maxxyz.x - minxyz.x;
+	let dy = maxxyz.y - minxyz.y;
+	let dz = maxxyz.z - minxyz.z;
+
+	let s = 100 / max(dx,dy,dz);
+	let mx = minxyz.x + dx/2;
+	let my = minxyz.y + dy/2;
+	let mz = minxyz.z + dz/2;
+
+	console.log("Scale", s, minxyz, maxxyz, dx, dy, dz, "mid", mx, my, mz);
+
+	for(v of vertex)
+	{
+		v.x = (v.x - mx) * s;
+		v.y = (v.y - my) * s;
+		v.z = (v.z - mz) * s;
+	}
+
+	this.triangles = vertex2triangles(vertex);
 
 	// trade some accuracy for faster rendering and better drawing
 	this.min_length = 5;
@@ -162,6 +203,15 @@ function STL(content)
 		t.project(camera);
 		if (t.invisible)
 			return;
+
+		// if the triangle is less than a pixel of screen,
+		// drop it.  this might cause problems with very fine
+		// detailed meshed, but those aren't good for plotting.
+		if (t.area() < 2)
+		{
+			//console.log(t, "filtered area", t.area());
+			return;
+		}
 
 		// this one is on screen, create segments for each
 		// of its non-coplanar edges
@@ -334,27 +384,133 @@ function STL(content)
 		return best;
 	}
 
+	// compute which of the nine possible outcodes the point is in
+	// relative to the viewing window
+	this.outcode = function(p,xmin,xmax,ymin,ymax)
+	{
+		let outcode = 0;
+		if (p.x < xmin)
+			outcode |= 0b0001;
+		else
+		if (p.x > xmax)
+			outcode |= 0b0010;
+
+		if (p.y < ymin)
+			outcode |= 0b0100;
+		else
+		if (p.y > ymax)
+			outcode |= 0b1000;
+
+		return outcode;
+	}
+
+	this.clip_to_win = function(p0,p1,xmin,xmax,ymin,ymax)
+	{
+		// check to see if a vector is partially
+		// on screen and if so, truncate it to screen
+		// cordinates using the Cohen–Sutherland algorithm
+		let outcode0 = this.outcode(p0,xmin,xmax,ymin,ymax);
+		let outcode1 = this.outcode(p1,xmin,xmax,ymin,ymax);
+
+		// both points share an outside,
+		// so the segment is entirely outside
+		if ((outcode0 & outcode1) != 0)
+			return null;
+
+		// both points are inside, so
+		// the segment is entirely visible
+		if ((outcode0 | outcode1) == 0)
+			return [p0,p1];
+
+		// at least one is outside the clip
+		let outcode = outcode1 > outcode0 ? outcode1 : outcode0;
+		let dx = p1.x - p0.x;
+		let dy = p1.y - p0.y;
+		let x, y;
+		if (outcode & 0b1000)
+		{
+			// point is above
+			x = p0.x + dx * (ymax - p0.y) / dy;
+			y = ymax;
+		} else
+		if (outcode & 0b0100)
+		{
+			// point is below
+			x = p0.x + dx * (ymin - p0.y) / dy;
+			y = ymin;
+		} else
+		if (outcode & 0b0010)
+		{
+			// point is to the right
+			x = xmax;
+			y = p0.y + dy * (xmax - p0.x) / dx;
+		} else
+		if (outcode & 0b0001)
+		{
+			// point is to the left
+			x = xmin;
+			y = p0.y + dy * (xmin - p0.x) / dx;
+		}
+
+		if (outcode == outcode0)
+		{
+			p0.x = x;
+			p0.y = y;
+		} else {
+			p1.x = x;
+			p1.y = y;
+		}
+
+		// trim the other side
+		return this.clip_to_win(p0,p1,xmin,xmax,ymin,ymax);
+	}
+
 	this.svg_path = function()
 	{
 		// create a list of vectors, removing any duplicates
-		const duplicates = {};
+		// and sorting by x value
+		// issue #27: tiny triangles end up duplicated
+		const drawn = [];
+		const precision = 4;
+
 		let workq = this.visible_segments.map(s => {
-			let p0 = s.p0;
-			let p1 = s.p1;
+			let pts = this.clip_to_win(
+				s.p0, s.p1,
+				-width/2, width/2,
+				-height/2, height/2);
+			if (!pts)
+				return null;
+
+			let p0 = pts[0];
+			let p1 = pts[1];
+
 			if (p1.x < p0.x)
 			{
-				p0 = s.p1;
-				p1 = s.p0;
+				p0 = pts[1];
+				p1 = pts[0];
 			}
 
-			// create the string form to track duplicates
-			const str = p0.x.toFixed(4) + "," + p0.y.toFixed(4) +
-				" " +
-				p1.x.toFixed(4) + "," + p1.y.toFixed(4);
+			for(const p of drawn)
+			{
+				const d00 = dist2(p0, p[0]);
+				const d01 = dist2(p0, p[1]);
+				const d10 = dist2(p1, p[0]);
+				const d11 = dist2(p1, p[1]);
 
-			if (str in duplicates)
-				return null;
-			duplicates[str] = 1;
+				if (d00 < precision && d11 < precision)
+				{
+					console.log("filtered", p0, p1);
+					return null;
+				}
+				if (d10 < precision && d01 < precision)
+				{
+					console.log("filtered", p0, p1);
+					return null;
+				}
+			}
+
+			drawn.push([p0, p1]);
+
 			return { p0: p0, p1: p1 };
 		});
 
