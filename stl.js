@@ -245,6 +245,7 @@ function STL(content)
 	{
 		let num_segments = this.segments.length;
 		if (num_segments == 0)
+			console.log('processing complete');
 			return false;
 
 		let start_time = performance.now();
