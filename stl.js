@@ -245,9 +245,10 @@ function STL(content)
 	// only processes some of the segments per call.
 	this.do_hidden = function(camera,ms)
 	{
+		console.log('hidden processing');
 		let num_segments = this.segments.length;
 		if (num_segments == 0)
-			console.log('processing complete');
+			console.log('hidden processing complete');
 			return false;
 
 		let start_time = performance.now();
