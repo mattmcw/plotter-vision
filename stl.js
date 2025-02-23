@@ -142,14 +142,16 @@ function STL(content)
 		this.coplanar = [];
 
 		// project the triangles into the screen mapping
-		console.log("projecting triangles");
-		for(let t of this.triangles)
+		console.log(`projecting triangles : ${this.triangles.length}`);
+		for (let t of this.triangles)
 			this.project_triangle(t, camera);
 
 		// sort the screen mapped triangles by Z
-		console.log("sorting triangles");
-		for(let key in this.screen_map)
+		console.log(`sorting keys: ${Object.keys(this.screen_map).length}`);
+		for (let key in this.screen_map)
+			console.log(`sorting triangles: ${this.screen_map[key].length}`);
 			this.screen_map[key].sort((a,b) => a.min.z - b.min.z);
+		console.log("finished sorting triangles");
 	}
 
 	this.project_triangle = function(t,camera)
