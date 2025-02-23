@@ -297,9 +297,10 @@ function STL(content)
 	{
 		console.log('hidden processing');
 		let num_segments = this.segments.length;
-		if (num_segments == 0)
+		if (num_segments == 0) {
 			console.log('hidden processing complete');
 			return false;
+		}
 
 		let start_time = performance.now();
 
@@ -311,12 +312,14 @@ function STL(content)
 		{
 			let s = this.segments.shift();
 			let visible_segment = hidden_wire(s, this.screen_map, this.segments);
-			if (visible_segment)
+			if (visible_segment) {
 				this.visible_segments.push(visible_segment);
+			}
 			count++;
 
-			if (performance.now() - start_time > ms)
+			if (performance.now() - start_time > ms) {
 				break;
+			}
 		}
 		console.log("hidden processing " + count + " segments in " + int(performance.now() - start_time) + " ms");
 
