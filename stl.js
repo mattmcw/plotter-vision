@@ -332,7 +332,7 @@ function STL(content)
 			return true;
 		if (this.do_hidden(camera,ms))
 			return true;
-
+		console.log('work done');
 		// no changes
 		return false;
 	}
