@@ -1,6 +1,6 @@
 # Plotter Vision
 
-[Fork Demo](https://musing-goldstine-cdd799.netlify.app/)
+[Fork Demo](https://mattmcw.github.io/plotter-vision/)
 
 ### Fork Notes
 
