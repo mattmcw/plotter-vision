@@ -127,7 +127,7 @@ function setup()
 
 	let eye = createVector(0,camera_radius,0);
 	let eye2 = createVector(0,camera_radius,0);
-	let lookat = createVector(0,0,00);
+	let lookat = createVector(0,0,0);
 	let up = createVector(0,0,1);
 	let fov = 60;
 	camera = new Camera(eye,lookat,up,fov);
@@ -226,7 +226,7 @@ function keyReleased()
 
 function keyPressed()
 {
-console.log(keyCode);
+	console.log(keyCode);
 	if (keyCode == SHIFT)
 		move_lookat = true;
 
