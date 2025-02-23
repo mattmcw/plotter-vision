@@ -147,9 +147,9 @@ function STL(content)
 			this.project_triangle(t, camera);
 
 		// sort the screen mapped triangles by Z
-		console.log(`sorting keys: ${Object.keys(this.screen_map).length}`);
+		console.log(`sorting triangles: ${Object.keys(this.screen_map).length} keys`);
 		for (let key in this.screen_map)
-			console.log(`sorting triangles: ${this.screen_map[key].length}`);
+			//console.log(`sorting triangles: ${this.screen_map[key].length}`);
 			this.screen_map[key].sort((a,b) => a.min.z - b.min.z);
 		console.log("finished sorting triangles");
 	}
