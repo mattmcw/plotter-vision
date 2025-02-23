@@ -146,7 +146,7 @@ function STL(content)
 	this.triangles = vertex2triangles(vertex);
 
 	// trade some accuracy for faster rendering and better drawing
-	this.min_length = 5;
+	this.min_length = 2;
 
 	// map the STL vertices within a fraction of a pixel
 	// so that coplanar mapping can be done much more quickly.
