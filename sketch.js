@@ -387,11 +387,16 @@ function draw()
 	textAlign(LEFT, BOTTOM);
 
 	text("camera " + int(camera.eye.x) + "," + int(camera.eye.y) + "," + int(camera.eye.z), 10, 30);
+	console.log("[camera] " + int(camera.eye.x) + "," + int(camera.eye.y) + "," + int(camera.eye.z));
 	text("lookat " + int(camera.lookat.x) + "," + int(camera.lookat.y) + "," + int(camera.lookat.z), 10, 50);
+	console.log("[lookat] " + int(camera.lookat.x) + "," + int(camera.lookat.y) + "," + int(camera.lookat.z));
 
 	text("theta " + int(camera_theta * 180 / Math.PI), 10, 100);
+	console.log("[theta] " + int(camera_theta * 180 / Math.PI));
 	text("  psi " + int(camera_psi * 180 / Math.PI), 10, 120);
+	console.log("[psi] " + int(camera_psi * 180 / Math.PI));
 	text("    r " + int(camera_radius), 10, 140);
+	console.log("[r] " + int(camera_radius));
 
 	if (stl.segments.length == 0)
 	{
